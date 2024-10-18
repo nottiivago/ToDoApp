@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import './style.scss'
 
 function ToDoList() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
+  
+  
 
   function handleInputChange(e) {
     setNewTask(e.target.value);
@@ -21,7 +24,16 @@ function ToDoList() {
     setTasks(deletedArray);
   }
 
-  function editTask(index) {}
+  function editTask(index) {
+    const currentTaskText = tasks[index].text;
+    const newTaskText = window.prompt('Edit the task:', currentTaskText);
+    if (newTaskText) {
+      const updatedTasks = tasks.map((task, i) =>
+        i === index ? { ...task, text: newTaskText } : task
+      );
+      setTasks(updatedTasks);
+    }
+  }
 
   function completeTask(index) {
     const updatedTasks = tasks.map((task, i) =>
@@ -35,7 +47,7 @@ function ToDoList() {
     <div className="toDoList">
       <h1>To Do List</h1>
       <div>
-        <input
+        <input className='inputField'
           type="text"
           placeholder="Add new task"
           value={newTask}
@@ -46,13 +58,13 @@ function ToDoList() {
         </button>
       </div>
 
-      <ul>
+      <ul className='tasksList'>
         {tasks.map((task, index) => (
           <li key={index}>
             {task.completed ? (
-              <span className="completed">{task.text}</span>
+            <span className="completed"><s>{task.text}</s></span>
             ) : (
-              <span className="notCompleted"><s>{task.text}</s></span>
+              <span className="notCompleted">{task.text}</span>
             )}
 
             <button className="deleteTaskBtn" onClick={() => deleteTask(index)}>
@@ -60,7 +72,7 @@ function ToDoList() {
             </button>
             <button
               className="editTaskBtn"
-              onClick={(editTask) => editTask(index)}
+              onClick={() => editTask(index)}
             >
               edit
             </button>
